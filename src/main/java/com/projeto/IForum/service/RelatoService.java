@@ -14,6 +14,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.projeto.IForum.model.Relato;
 import com.projeto.IForum.model.RelatoAnonimo;
 import com.projeto.IForum.model.RelatoPublico;
+import com.projeto.IForum.model.StatusRelato;
+import com.projeto.IForum.model.TipoRelato;
 import com.projeto.IForum.model.User;
 import com.projeto.IForum.repositorios.RelatoRepository;
 
@@ -53,10 +55,6 @@ public class RelatoService {
         relatoRepository.deleteById(id);
     }
 
-    
-    public List<Relato> buscarPorCategoria(String categoria) {
-        return relatoRepository.findByCategoria(categoria);
-    }
 
      public void fazerRelatoAnonimo(RelatoAnonimo denuncia) {
         relatoRepository.save(denuncia);
@@ -84,9 +82,27 @@ public Relato atualizarRelato(Long id, Relato novo) {
     relatoExistente.setCategoria(novo.getCategoria());
     relatoExistente.setTipo(novo.getTipo());
     relatoExistente.setData(LocalDate.now());
+    relatoExistente.setStatus(novo.getStatus()); 
 
     return relatoRepository.save(relatoExistente);
 }
+
+public List<Relato> listarPorUsuarioId(Long usuarioId) {
+        return relatoRepository.findByUsuarioId(usuarioId);
+    }
+
+    public long contarTodos() {
+    return relatoRepository.count();
+}
+
+public long contarPorStatus(StatusRelato status) {
+    return relatoRepository.countByStatus(status);
+}
+
+public long contarPorTipo(TipoRelato tipo) {
+    return relatoRepository.countByTipo(tipo);
+}
+
 
     
 

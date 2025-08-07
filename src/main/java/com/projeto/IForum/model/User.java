@@ -1,14 +1,17 @@
 package com.projeto.IForum.model;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import io.micrometer.common.lang.Nullable;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -25,20 +28,21 @@ import lombok.Data;
 @Table(name = "TB_USER")
 @Inheritance(strategy = InheritanceType.JOINED)
 @Data
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public abstract class User implements Serializable {
 	private static final long serialVersionUID = -6518853480190451215L;
 	
 
 	
-
-	@OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
-private List<Relato> relatos = new ArrayList<>();
+@OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+@JsonManagedReference
+private List<Relato> relatos;
 		
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_seq")
 	@SequenceGenerator(name = "user_seq", sequenceName = "tb_user_seq", allocationSize = 1)
-	private long id;
+	private Long id;
 
 	@Column(unique = true)
 	@Nullable()
@@ -60,6 +64,8 @@ private List<Relato> relatos = new ArrayList<>();
 	public User() {
 		
 	}	
+
+	
 
 
 }
