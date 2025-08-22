@@ -12,6 +12,7 @@ public class UserDTO {
     private Date nascimento;
     private String senha;
     private String tipoUsuario;
+    private String matricula;
     
     // opcionais
     private String setor;  // Do funcionario

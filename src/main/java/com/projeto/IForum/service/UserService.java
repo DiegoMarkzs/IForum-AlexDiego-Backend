@@ -56,7 +56,6 @@ public class UserService {
         existente.setSenha(userAtualizado.getSenha());
         existente.setNascimento(userAtualizado.getNascimento());
 
-       
         if (existente instanceof Funcionario && userAtualizado instanceof Funcionario) {
             ((Funcionario) existente).setSetor(((Funcionario) userAtualizado).getSetor());
         } else if (existente instanceof Aluno && userAtualizado instanceof Aluno) {
@@ -66,7 +65,30 @@ public class UserService {
         return userRepository.save(existente);
     }
 
+ 
+    public Optional<User> buscarPorMatricula(String matricula) {
+        Optional<Aluno> aluno = userRepository.findAlunoByMatricula(matricula);
+        if (aluno.isPresent()) return Optional.of(aluno.get());
+
+        Optional<Coordenador> coordenador = userRepository.findCoordenadorByMatricula(matricula);
+        if (coordenador.isPresent()) return Optional.of(coordenador.get());
+
+        return Optional.empty();
+    }
+
+ 
+    public Optional<User> loginPorMatricula(String matricula, String senha) {
+        Optional<User> userOpt = buscarPorMatricula(matricula);
+        if (userOpt.isPresent()) {
+            User u = userOpt.get();
+            if (senha == null || senha.isEmpty() || u.getSenha().equals(senha)) {
+                return userOpt;
+            }
+        }
+        return Optional.empty();
+    }
+
     public Optional<User> login(String email, String senha) {
-    return userRepository.findByEmailAndSenha(email, senha);
-}
+        return userRepository.findByEmailAndSenha(email, senha);
+    }
 }

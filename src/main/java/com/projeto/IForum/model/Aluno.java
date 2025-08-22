@@ -13,6 +13,9 @@ import lombok.Data;;
 
 public class Aluno extends User{
 
+    @Column(name = "matricula", unique = true, nullable = false)
+    private String matricula;
+
     @Column(name = "curso")
     private String curso;
 
